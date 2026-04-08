@@ -93,6 +93,14 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
+        if (Boolean.FALSE.equals(user.getEnabled())) {
+            throw new IllegalArgumentException("Account is disabled");
+        }
+
+        if (user.getStatus() == null || !user.getStatus().equalsIgnoreCase("ACTIVE")) {
+            throw new IllegalArgumentException("Account is not active");
+        }
+
         String token = jwtService.generateToken(user);
         RefreshToken refreshToken = createRefreshToken(user);
 
